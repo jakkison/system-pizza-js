@@ -108,12 +108,68 @@ qs('.pizzaInfo--addButton').addEventListener('click', ()=>{
 
 //atualizar carrinho
 function updateCart(){
-    if (cart.length > 0) {// caso tenha itens no carrinho ele é mostrado
+    if (cart.length > 0) {   // caso tenha itens no carrinho ele é mostrado
         qs('aside').classList.add('show');
-    }else{ // se não tiver itens o carrinho não fica na tela
+        qs('.cart').innerHTML = '';
+        let subTotal = 0;
+        let total = 0;
+        let desconto = 0;
+        for(let i in cart){
+            let pizzaItem = pizzaJson.find((item)=> item.id == cart[i].id);
+            subTotal += pizzaItem.price * cart[i].qt;
+            let cartItem =  qs('.models .cart--item').cloneNode(true);
+
+            let pizzaSizeName;
+            switch(cart[i].size){
+                case 0:
+                    pizzaSizeName = 'Peq.';
+                    break;
+                
+                case 1:
+                    pizzaSizeName = 'Méd.'
+                    break;
+                
+                case 2:
+                    pizzaSizeName = 'Gran.'
+                    break;
+            }
+
+            let pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
+
+            cartItem.querySelector('img').src = pizzaItem.img;
+            cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
+            cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qt;
+            cartItem.querySelector(".cart--item-qtmenos").addEventListener("click", () => {
+                if (cart[i].qt > 1) {
+                    cart[i].qt--;
+
+                } else {
+                    cart.splice(i, 1)
+                }
+                updateCart();
+            });
+            
+            cartItem.querySelector(".cart--item-qtmais").addEventListener("click", () => {
+                cart[i].qt++;
+                updateCart();
+            });
+
+            qs('.cart').append(cartItem);
+        }
+
+        desconto = subTotal * 0.1;
+        total = subTotal - desconto;
+        qs('.subtotal span:last-child').innerHTML = `R$ ${subTotal.toFixed(2)}`;
+        qs('.desconto span:last-child').innerHTML = `R$ ${desconto.toFixed(2)}`;
+        qs('.total span:last-child').innerHTML = `R$ ${total.toFixed(2)}`;
+        
+    } else { // se não tiver itens o carrinho não fica na tela
         qs('aside').classList.remove('show');
+        qs("aside").style.left = "100vw";
     }
 }
+
+// -----------------PRÓXIMO DESAFIO É CRIAR UMA PÁGINA DE PEDIDO FINALIZADO -------------------------------
 
 
 
