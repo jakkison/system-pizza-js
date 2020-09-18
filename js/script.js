@@ -171,5 +171,19 @@ function updateCart(){
 
 // -----------------PRÓXIMO DESAFIO É CRIAR UMA PÁGINA DE PEDIDO FINALIZADO -------------------------------
 
-
+qs(".cart--finalizar").addEventListener('click', () => {
+    for(let i in cart){
+        let pizzaItem = pizzaJson.find((item)=> item.id == cart[i].id);
+        let subTotal = 0;
+        let total = 0;
+        let desconto = 0;
+        subTotal += pizzaItem.price * cart[i].qt;
+        desconto = subTotal * 0.1;
+        total = subTotal - desconto;
+        qs('.subtotal span:last-child').innerHTML = `R$ ${subTotal.toFixed(2)}`;
+        qs('.desconto span:last-child').innerHTML = `R$ ${desconto.toFixed(2)}`;
+        qs('.total span:last-child').innerHTML = `R$ ${total.toFixed(2)}`;
+        alert('Calma, to desenvolvendo isso! \n Mas o que tu deve para o restaurante por iss é: \n R$: ' + total.toFixed(2) +' Reais.');
+        }
+    });
 
